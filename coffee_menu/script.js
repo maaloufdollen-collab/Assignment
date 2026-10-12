@@ -6,19 +6,22 @@ const menu = [
 ]; 
 let cart = []; 
 function renderMenu()
+//displays the menu in a list form :item name - price
 {
     const menuList=document.getElementById("menu-list");
     //to get the elements with id=menu-list
     menuList.textContent="";
     //clears the list
     menu.forEach((item)=>{
+        //for each item in the menu store it in a list
         const li=document.createElement("li");
         li.textContent=item.name+" — $"+item.price.toFixed(2);
+        //each list has an Add button
         const button =document.createElement("button");
         button.textContent=" Add";
         button.addEventListener("click",()=>{
             cart.push(item);
-            renderCart();
+            renderCart();//to update cart display everytime we click on Add
         });//when button is clicked execute this function
         li.appendChild(button);//put button inside the list
         menuList.appendChild(li);
@@ -27,6 +30,7 @@ function renderMenu()
 
 const cartList=document.getElementById("cart-list");
 
+//updates the cart
 function renderCart(){
     cartList.textContent="";
     const cart_count=document.getElementById("cart-count");
@@ -38,6 +42,8 @@ function renderCart(){
         const item=items[0];
     const li=document.createElement("li");
         li.textContent=item.name+" x "+quantity+" — $ "+(item.price*quantity).toFixed(2)+" ";
+       
+        //we added two new buttons + and -
         const plus=document.createElement("button");
         plus.textContent="+";
         plus.dataset.name=name;
@@ -47,6 +53,7 @@ function renderCart(){
         
         // const button=document.createElement("button");
         // button.textContent=" Remove";
+        //we used button.dataset.index in order to delete one entry even if the user entered same entry twice
         //button.dataset.index=index;//we are putting the index number on the button
         //but the user doesn't see the index of the button only javascript does
         
@@ -64,11 +71,13 @@ function renderCart(){
         //event.target means the thing i clicked
     {
         const name=event.target.dataset.name;
+        //if we clicked on + add at the end
         if(event.target.textContent==="+")
             {
                 const item=cart.find(c=>c.name===name);
                 cart.push(item);
             }
+            //if we clicked - delete at index
         else if(event.target.textContent==="-")
             {
                 const i=cart.findIndex(c=>c.name===name);
@@ -105,31 +114,41 @@ function addTomenu()
     const click=document.getElementById("add-custom-btn");
     click.addEventListener("click",()=>{
         const item=document.getElementById("item-name").value.trim();
+        //we take item-name then trim it then take price and trim
         const price=document.getElementById("item-price").value.trim();
 
     const error=document.getElementById("error-msg");
     error.style.color="red";
-    error.textContent="";
+    error.textContent="";//error is empty
     let valid=true;
-    if(item==="")
+
+    if(item==="")//if item name is empty
         {
             error.textContent+="Name is required.";
             valid=false;
         }
+    if(!isNaN(item))
+    {
+        error.textContent+="Item name shouldn't be a number";
+        valid=false;
+    }
     if(price<=0)
     {
         error.textContent+="Price must be a positive number.";
          valid=false;
     }
-    if(isNaN(Number(price)))
+
+    if(isNaN(Number(price)))//price is not a number
+    //Number(price) at the start we are taking price of a string form
     {
         error.textContent+="Price must be a number.";
          valid=false;
     }
-    
+    //to check if item already exists
     const exists=menu.some((c)=>{
         return c.name.toLowerCase()===item.toLowerCase();
     });
+
     if(exists)
     {
         error.textContent+=" This item already exists.";
@@ -139,11 +158,12 @@ function addTomenu()
     {
          return;
     }
+    
    menu.push({name:item, price:Number(price)});
-   renderMenu();
+   renderMenu();//to add on the displayed menu
    document.getElementById("item-name").value="";//.value because they are an input
    document.getElementById("item-price").value="";
-   document.getElementById("error-msg").textContent="";//.textContnt because its a message
+   document.getElementById("error-msg").textContent="";//.textContent because its a message
 });
 }
 
@@ -151,12 +171,13 @@ function ClearCart()
 {
     const clear=document.getElementById("clear-cart-btn");
     clear.addEventListener("click",()=>{
-    if(cart.length===0)
+   
+    if(cart.length===0)//in case we clicked clear but the cart is already empty
    { const message =document.getElementById("cart-list");
     message.textContent="Your cart is already empty";
    }
    else{cart=[];//empty the cart
-    renderCart();
+    renderCart();//updates the display of the cart
    }
 });
 }

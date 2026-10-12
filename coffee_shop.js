@@ -57,16 +57,16 @@ function printPriceTable(size,isMember,hour)
     //cup from 1->10
     for(let i=1;i<=10;i++)
     {
-        let price=calculatePrice(size,i,isMember,hour);
+        let price=calculatePrice(size,i,isMember,hour);//called the function calculateprice in order to get the toal of cups based on their qty
         console.log("Qty"+i+"->"+"$"+price.toFixed(2));
     }
 }
-
 
 function cheapestHour(size,quantity,isMember)
 {
     let low=calculatePrice(size,quantity,isMember,0);
     let bestHour=0;
+    //the loop checks all hours, whenever it finds a lower price it updates
     for(let h=0;h<=23;h++)
     {
         let price=calculatePrice(size,quantity,isMember,h);
